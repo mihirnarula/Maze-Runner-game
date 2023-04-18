@@ -1,0 +1,157 @@
+var player = createSprite(25, 50, 20, 20);
+var obstacle1 = createSprite(55, 150, 5, 300);
+var obstacle2 = createSprite(115, 250, 5, 300);
+var obstacle3 = createSprite(175, 150, 5, 300);
+var target = createSprite(375, 25, 20, 30);
+var apple1 = createSprite(200, 50, 20, 20); 
+var carrot1 = createSprite(175, 350, 20, 20);
+var cherry = createSprite(175, 350, 20, 20);
+var GameState = "serve";
+var count = 0;
+var time = 0;
+var time2;
+
+serve();
+function draw() {
+background("rgb(67,172,210)");
+
+// time taken to complete game
+time = World.seconds;
+
+text("EAT THE FOOD BEFORE",205, 120);
+text("YOU HIT THE TARGET", 205, 135);
+
+createEdgeSprites();
+// Food bounces of the edges
+apple1.bounceOff(edges);
+carrot1.bounceOff(edges);
+cherry.bounceOff(edges);
+player.bounceOff(edges);
+
+apple1.bounceOff(obstacle1);
+apple1.bounceOff(obstacle2);
+apple1.bounceOff(obstacle3);
+
+carrot1.bounceOff(obstacle1);
+carrot1.bounceOff(obstacle2);
+carrot1.bounceOff(obstacle3);
+
+cherry.bounceOff(obstacle1);
+cherry.bounceOff(obstacle2);
+cherry.bounceOff(obstacle3);
+
+
+carrot1.bounceOff(apple1);
+carrot1.bounceOff(cherry);
+cherry.bounceOff(apple1);
+cherry.bounceOff(carrot1);
+apple1.bounceOff(carrot1);
+apple1.bounceOff(cherry);
+
+apple1.setAnimation("apple_1");
+carrot1.setAnimation("carrot_1");
+cherry.setAnimation("cherry");
+
+apple1.height = 40;
+apple1.width = 40;
+
+carrot1.height = 40;
+carrot1.width = 40;
+
+cherry.height = 40;
+cherry.width = 20;
+
+// Ghost eats the food
+if(player.isTouching(apple1)){
+  apple1.destroy();
+  count = count + 1;
+}
+
+if(player.isTouching(carrot1)){
+  carrot1.destroy();
+count = count + 1;
+}
+
+if(player.isTouching(cherry)){
+  cherry.destroy();
+  count = count + 1;
+}
+
+
+
+//4 arrow keys are used to direct the player
+if(keyDown(UP_ARROW)) {
+    player.velocityX = 0;
+    player.velocityY = -2;
+  }
+  if(keyDown(DOWN_ARROW)){
+    player.velocityX = 0;
+    player.velocityY = 2;
+    }
+  if(keyDown(LEFT_ARROW)){
+    player.velocityX = -2;
+    player.velocityY = 0;
+    }  
+  if(keyDown(RIGHT_ARROW)){
+    player.velocityX = 2;
+    player.velocityY = 0;
+  }
+  if(keyDown("space")){
+    player.velocityX = 0;
+    player.velocityY = 0;
+  }
+
+
+
+target.tint = ("red");
+if(player.isTouching(obstacle1) || player.isTouching(obstacle1) || player.isTouching(obstacle1))
+{
+  text("YOU LOSE", 230, 350);
+player.velocityX = 0;
+player.velocityY = 0;
+
+apple1.velocityX = 0;
+apple1.velocityY = 0;
+
+carrot1.velocityX = 0;
+carrot1.velocityY = 0;
+
+cherry.velocityX = 0;
+cherry.velocityY = 0;
+}
+player.setAnimation("ghost");
+player.height = 30;
+player.width = 20;
+
+// when player hits target(and eats food) the player wins 
+if(player.isTouching(target) && count === 3){
+  text("YOU WIN",200, 300);
+  time2 = time;
+  text("Time Taken: " + time2, 200, 275);
+  if(time2 < 45){
+    text("GOOD", 200, 250);
+  }
+  if(time2 < 65 && time > 45){
+    text("NORMAL", 200, 250);
+  }
+  if(time2 > 65){
+    text("BAD", 200, 250);
+  }
+  player.velocityX = 0;
+  player.velocityY = 0;
+}
+
+
+drawSprites();  
+}
+function serve(){
+  // Speed of food
+apple1.velocityX = 4;
+apple1.velocityY = 3;
+carrot1.velocityX = 4;
+carrot1.velocityY = 3;
+cherry.velocityX = 4;
+cherry.velocityY = 3;
+  
+}
+
